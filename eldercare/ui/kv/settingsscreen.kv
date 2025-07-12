@@ -1,0 +1,17 @@
+<SettingsScreen>:
+    name: 'settings_screen'
+    MDBoxLayout:
+        orientation: 'vertical'
+        padding: '16dp'
+        spacing: '16dp'
+        MDLabel:
+            text: "Application Settings"
+            font_style: "H6"
+        TwoLineAvatarIconListItem:
+            text: "Theme"
+            secondary_text: "Switch between light and dark mode"
+            IconLeftWidget:
+                icon: "theme-light-dark"
+            RightSwitch:
+                id: theme_switch
+                on_active: app.toggle_theme(self.active)

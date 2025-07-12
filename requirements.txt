@@ -1,0 +1,8 @@
+# D:\ahmed\Eldercare\app\requirements.txt
+
+kivy
+kivymd
+plyer
+firebase-python
+bcrypt
+cryptography

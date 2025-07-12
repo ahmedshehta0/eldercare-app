@@ -1,0 +1,30 @@
+<LoginScreen>:
+    name: 'login'
+    MDBoxLayout:
+        orientation: 'vertical'
+        padding: "40dp"
+        spacing: "20dp"
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        size_hint: 0.85, 0.7
+        MDLabel:
+            text: "ElderCare AI"
+            halign: 'center'
+            font_style: 'H4'
+            theme_text_color: "Primary"
+        MDTextField:
+            id: username
+            hint_text: "Username"
+            icon_right: "account"
+        MDTextField:
+            id: password
+            hint_text: "Password"
+            password: True
+            icon_right: "key-variant"
+        MDRaisedButton:
+            text: "LOGIN"
+            on_release: app.login(username.text, password.text)
+            pos_hint: {'center_x': 0.5}
+        MDFlatButton:
+            text: "Register (Admin only)"
+            on_release: app.show_snackbar("Please contact administrator for an account.")
+            pos_hint: {'center_x': 0.5}

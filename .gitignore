@@ -1,0 +1,13 @@
+# Buildozer files
+.buildozer/
+bin/
+venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Temporary files
+*.swp
+*~
+*.zip

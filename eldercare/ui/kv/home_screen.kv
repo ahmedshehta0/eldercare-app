@@ -1,0 +1,16 @@
+<HomeScreen>:
+    name: 'home_screen'
+    MDBoxLayout:
+        orientation: 'vertical'
+        padding: "16dp"
+        spacing: "16dp"
+        MDLabel:
+            text: "Your Daily Dashboard"
+            font_style: "H5"
+        MDRaisedButton:
+            text: "Manage Medications"
+            on_release: app.change_screen('meds_screen', 'My Medications')
+        MDBoxLayout:
+            id: ad_banner_placeholder
+            size_hint_y: None
+            height: 0 # Hidden by default

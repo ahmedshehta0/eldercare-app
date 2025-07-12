@@ -1,0 +1,14 @@
+<MedsScreen>:
+    name: 'meds_screen'
+    MDBoxLayout:
+        orientation: 'vertical'
+        ScrollView:
+            MDList:
+                id: med_list
+    MDFloatingActionButton:
+        icon: "plus"
+        pos_hint: {"right": 1, "bottom": 1}
+        elevation: 10
+        on_release: root.show_med_dialog()
+        md_bg_color: app.theme_cls.primary_color
+        pos: self.parent.width - self.width - dp(16), dp(16)

@@ -1,0 +1,52 @@
+<MainScreen>:
+    name: 'main'
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDTopAppBar:
+            id: top_bar
+            title: "Dashboard"
+            left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+        
+        ScreenManager:
+            id: main_screen_manager
+            HomeScreen:
+                name: 'home_screen'
+            MedsScreen:
+                name: 'meds_screen'
+            SettingsScreen:
+                name: 'settings_screen'
+    
+    MDNavigationDrawer:
+        id: nav_drawer
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: "8dp"
+            spacing: "8dp"
+            MDLabel:
+                id: nav_drawer_username
+                text: "Welcome!"
+                font_style: 'Subtitle1'
+                size_hint_y: None
+                height: self.texture_size[1]
+                halign: 'center'
+            MDList:
+                OneLineAvatarIconListItem:
+                    text: "Home"
+                    on_release: app.change_screen('home_screen', 'Dashboard')
+                    IconLeftWidget:
+                        icon: "home"
+                OneLineAvatarIconListItem:
+                    text: "Medications"
+                    on_release: app.change_screen('meds_screen', 'My Medications')
+                    IconLeftWidget:
+                        icon: "pill"
+                OneLineAvatarIconListItem:
+                    text: "Settings"
+                    on_release: app.change_screen('settings_screen', 'Settings')
+                    IconLeftWidget:
+                        icon: "cog"
+                OneLineAvatarIconListItem:
+                    text: "Logout"
+                    on_release: app.logout()
+                    IconLeftWidget:
+                        icon: "logout"

@@ -1,0 +1,20 @@
+#:import get_color_from_hex kivy.utils.get_color_from_hex
+
+# Import Python classes for Kivy to use
+#:import LoginScreen eldercare.ui.screens.login_screen.LoginScreen
+#:import MainScreen eldercare.ui.screens.main_screen.MainScreen
+#:import HomeScreen eldercare.ui.screens.home_screen.HomeScreen
+#:import MedsScreen eldercare.ui.screens.meds_screen.MedsScreen
+#:import SettingsScreen eldercare.ui.screens.settings_screen.SettingsScreen
+#:import RightSwitch eldercare.ui.screens.settings_screen.RightSwitch
+
+# Include all the individual KV files
+#:include ui/kv/loginscreen.kv
+#:include ui/kv/mainscreen.kv
+#:include ui/kv/homescreen.kv
+#:include ui/kv/medsscreen.kv
+#:include ui/kv/settingsscreen.kv
+
+<RootScreenManager@ScreenManager>:
+    LoginScreen:
+    MainScreen:
