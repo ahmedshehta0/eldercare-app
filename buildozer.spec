@@ -19,5 +19,9 @@ android.minapi = 21
 # that needs to run on boot. pyjnius handles it.
 
 [buildozer]
+# Set the global buildozer directory to be inside the project folder
+# This forces buildozer to use the SDKs we control.
+build_dir = ./.buildozer
+
 log_level = 2
 warn_on_root = 1

@@ -72,6 +72,8 @@ jobs:
     # Step 7: Run Buildozer to compile the APK
     - name: Run Buildozer
       run: |
+       yes | .buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses || true
+
         source venv/bin/activate
         buildozer -v android debug
 
