@@ -12,6 +12,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false  # <-- ADDED THIS LINE
+
+      - name: Clean contaminated checkout
+        run: |
+          git config --global --unset-all http.https://github.com/.extraheader
+          git config --local --unset-all http.https://github.com/.extraheader
+        continue-on-error: true
 
       - name: Set up python-for-android with Buildozer
         uses: ArtemSBulgakov/buildozer-action@v1
