@@ -11,16 +11,12 @@ icon.filename = %(source.dir)s/assets/logo.png
 android.add_assets = .
 
 [android]
-android.permissions = INTERNET,VIBRATE,WAKE_LOCK
+android.permissions = INTERNET
+android.archs = arm64-v8a
 android.api = 31
 android.minapi = 21
-android.archs = arm64-v8a
-android.add_assets = .
-
-# --- Force Buildozer to use our manually prepared SDK ---
-android.sdk_path = /home/runner/android-sdk
-android.ndk_path = /home/runner/android-sdk/ndk-bundle  # A standard sub-path
-android.skip_update = True
+# We don't need to specify service here if it's not a background service
+# that needs to run on boot. pyjnius handles it.
 
 [buildozer]
 log_level = 2
