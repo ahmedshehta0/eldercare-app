@@ -15,6 +15,8 @@ android.permissions = INTERNET
 android.archs = arm64-v8a
 android.api = 31
 android.minapi = 21
+# We don't need to specify service here if it's not a background service
+# that needs to run on boot. pyjnius handles it.
 
 [buildozer]
 log_level = 2

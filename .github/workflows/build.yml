@@ -1,4 +1,4 @@
-name: Final Android APK Build
+name: Final Manual Android APK Build
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04 # Using a stable LTS version
 
     steps:
     - name: Checkout code
@@ -31,17 +31,20 @@ jobs:
 
     - name: Manually download and set up Android SDK
       run: |
-        # Create SDK directory
-        mkdir -p $HOME/android_sdk/cmdline-tools
+        # Create SDK directory and navigate into it
+        mkdir -p android-sdk
+        cd android-sdk
         # Download and extract cmdline-tools
         wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-        unzip commandlinetools-linux-11076708_latest.zip -d $HOME/android_sdk/cmdline-tools
+        unzip commandlinetools-linux-11076708_latest.zip
         # Fix directory structure
-        mv $HOME/android_sdk/cmdline-tools/cmdline-tools $HOME/android_sdk/cmdline-tools/latest
+        mv cmdline-tools latest
+        # Set environment variable for the SDK root
+        echo "ANDROID_HOME=$PWD" >> $GITHUB_ENV
         # Accept all licenses
-        yes | $HOME/android_sdk/cmdline-tools/latest/bin/sdkmanager --licenses --sdk_root=$HOME/android_sdk
-        # Install necessary packages
-        $HOME/android_sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-31" "build-tools;30.0.3" --sdk_root=$HOME/android_sdk
+        yes | latest/bin/sdkmanager --licenses
+        # Install necessary platform and build tools
+        latest/bin/sdkmanager "platforms;android-31" "build-tools;30.0.3" "platform-tools"
 
     - name: Install Python packages
       run: |
@@ -51,9 +54,6 @@ jobs:
         pip install "cython<3.0.0" kivy kivymd plyer firebase-admin bcrypt cryptography buildozer
 
     - name: Run Buildozer
-      env:
-        ANDROID_HOME: ${{ env.HOME }}/android_sdk
-        ANDROID_SDK_ROOT: ${{ env.HOME }}/android_sdk
       run: |
         source venv/bin/activate
         buildozer -v android debug
@@ -63,3 +63,4 @@ jobs:
       with:
         name: eldercare-apk
         path: bin/*.apk
+        if-no-files-found: error # This will make the job fail if no APK is found
