@@ -1,4 +1,4 @@
-name: Ultimate Final Android APK Build
+name: Final Manual Android APK Build
 
 on:
   push:
@@ -29,6 +29,32 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y git zip unzip build-essential libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libffi-dev libssl-dev
 
+    - name: Manually download and set up Android SDK
+      run: |
+        # Define SDK root path using GITHUB_WORKSPACE for absolute path
+        SDK_ROOT=$GITHUB_WORKSPACE/android-sdk
+        echo "SDK_ROOT=$SDK_ROOT" >> $GITHUB_ENV
+        
+        # Create SDK directory and navigate into it
+        mkdir -p $SDK_ROOT
+        
+        # Download and extract cmdline-tools
+        wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
+        unzip cmdline-tools.zip -d $SDK_ROOT
+        
+        # Move tools to the expected 'latest' folder
+        mkdir $SDK_ROOT/cmdline-tools/latest
+        mv $SDK_ROOT/cmdline-tools/* $SDK_ROOT/cmdline-tools/latest/
+        
+        # Set environment variable for other steps
+        echo "ANDROID_HOME=$SDK_ROOT" >> $GITHUB_ENV
+        
+        # Accept all licenses
+        yes | $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
+        
+        # Install necessary platform and build tools
+        $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platforms;android-31" "build-tools;30.0.3" "platform-tools"
+
     - name: Install Python packages
       run: |
         python -m venv venv
@@ -36,14 +62,9 @@ jobs:
         pip install --upgrade pip setuptools
         pip install "cython<3.0.0" kivy kivymd plyer firebase-admin bcrypt cryptography buildozer
 
-    - name: Run Buildozer (and pre-accept licenses)
+    - name: Run Buildozer
       run: |
         source venv/bin/activate
-        # This will trigger the initial SDK download inside ./.buildozer
-        # and then immediately accept the licenses before the main build.
-        # The '|| true' ensures the command doesn't fail if there's nothing to accept yet.
-        yes | buildozer android p4a -- sdkmanager --licenses || true
-        # Now run the actual build command
         buildozer -v android debug
 
     - name: Upload APK

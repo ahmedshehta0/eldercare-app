@@ -19,11 +19,11 @@ android.enable_androidx = True
 p4a.source_dir = src
 services = AlarmReceiver:src/main/java/org/eldercare/singularity/AlarmReceiver.java
 
+# --- Point to the SDK we built in the workflow ---
+android.sdk_path = /github/workspace/android-sdk
 
 [buildozer]
-# Force buildozer to create its .buildozer directory locally in the project folder
-build_dir = ./.buildozer
-
-# (int) Log level (0 = error only, 1 = info, 2 = debug (with command output))
 log_level = 2
 warn_on_root = 1
+# Let's use the develop branch for better compatibility
+p4a.branch = develop
