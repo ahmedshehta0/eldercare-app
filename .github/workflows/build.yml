@@ -1,4 +1,4 @@
-name: Final Optimized Android APK Build
+name: Ultimate Final Android APK Build
 
 on:
   push:
@@ -10,53 +10,25 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    # Step 1: Get the code from your repository
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # Step 2: Set up Java (JDK 17 is required by the latest sdkmanager)
     - name: Set up Java 17
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: '17'
 
-    # Step 3: Set up Python
     - name: Set up Python 3.9
       uses: actions/setup-python@v5
       with:
         python-version: '3.9'
 
-    # Step 4: Install system-level dependencies for Python packages
     - name: Install system dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y git zip unzip build-essential libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libffi-dev libssl-dev
 
-    # Step 5: Manually prepare the Android SDK environment
-    - name: Manually download and set up Android SDK
-      run: |
-        # Define the exact location for the SDK
-        SDK_ROOT=$HOME/android-sdk
-        
-        # Create the necessary directory structure
-        mkdir -p $SDK_ROOT/cmdline-tools
-        
-        # Download, extract, and structure the command line tools
-        wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-        unzip commandlinetools-linux-11076708_latest.zip -d $SDK_ROOT/cmdline-tools
-        mv $SDK_ROOT/cmdline-tools/cmdline-tools $SDK_ROOT/cmdline-tools/latest
-        
-        # Set the ANDROID_HOME environment variable so Buildozer can find it
-        echo "ANDROID_HOME=$SDK_ROOT" >> $GITHUB_ENV
-        
-        # Automatically accept all licenses
-        yes | $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses --sdk_root=$SDK_ROOT
-        
-        # Install the required platform, build-tools, and other essential packages
-        $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platforms;android-31" "build-tools;30.0.3" "platform-tools" --sdk_root=$SDK_ROOT
-
-    # Step 6: Install Python project dependencies
     - name: Install Python packages
       run: |
         python -m venv venv
@@ -64,14 +36,16 @@ jobs:
         pip install --upgrade pip setuptools
         pip install "cython<3.0.0" kivy kivymd plyer firebase-admin bcrypt cryptography buildozer
 
-    # Step 7: Run Buildozer to compile the app
-    - name: Run Buildozer
+    - name: Run Buildozer (and pre-accept licenses)
       run: |
         source venv/bin/activate
-        # Buildozer will now use the SDK from ANDROID_HOME and find all tools
+        # This will trigger the initial SDK download inside ./.buildozer
+        # and then immediately accept the licenses before the main build.
+        # The '|| true' ensures the command doesn't fail if there's nothing to accept yet.
+        yes | buildozer android p4a -- sdkmanager --licenses || true
+        # Now run the actual build command
         buildozer -v android debug
 
-    # Step 8: Upload the final APK
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
