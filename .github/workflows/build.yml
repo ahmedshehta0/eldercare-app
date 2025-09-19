@@ -1,4 +1,4 @@
-name: Build with Docker
+name: Simple Buildozer Build
 
 on:
   push:
@@ -10,10 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build with buildozer-docker
-        uses: cbusillo/buildozer-docker-action@v1.2.1
+      - name: Build with buildozer
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
         with:
           command: buildozer android debug
+          buildozer_version: master
+          
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: ${{ steps.buildozer.outputs.filename_debug }}
