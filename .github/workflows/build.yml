@@ -1,4 +1,4 @@
-name: Final Corrected Manual Android APK Build
+name: Guaranteed Final Android APK Build
 
 on:
   push:
@@ -29,26 +29,24 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y git zip unzip build-essential libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libffi-dev libssl-dev
 
-    - name: Manually download and set up Android SDK
+    - name: Manually download and set up Android SDK (Corrected Structure)
       run: |
         SDK_ROOT=$GITHUB_WORKSPACE/android-sdk
-        echo "SDK_ROOT=$SDK_ROOT" >> $GITHUB_ENV
-        
-        # Download and extract cmdline-tools
-        wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
-        unzip cmdline-tools.zip -d $SDK_ROOT
-        
-        # CORRECT WAY: Rename the extracted folder to 'latest'
-        mv $SDK_ROOT/cmdline-tools $SDK_ROOT/latest
-        
-        # Now the path is correct: $SDK_ROOT/latest/bin/sdkmanager
         echo "ANDROID_HOME=$SDK_ROOT" >> $GITHUB_ENV
         
-        # Accept all licenses
-        yes | $SDK_ROOT/latest/bin/sdkmanager --licenses
+        # Download cmdline-tools
+        wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
+        
+        # Create the EXACT directory structure sdkmanager expects
+        mkdir -p $SDK_ROOT/cmdline-tools
+        unzip cmdline-tools.zip -d $SDK_ROOT/cmdline-tools
+        mv $SDK_ROOT/cmdline-tools/cmdline-tools $SDK_ROOT/cmdline-tools/latest
+        
+        # Now, run sdkmanager from its correct location and it will find its root
+        yes | $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
         
         # Install necessary platform and build tools
-        $SDK_ROOT/latest/bin/sdkmanager "platforms;android-31" "build-tools;30.0.3" "platform-tools"
+        $SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "platforms;android-31" "build-tools;30.0.3" "platform-tools"
 
     - name: Install Python packages
       run: |
