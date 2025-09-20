@@ -5,14 +5,22 @@ package.domain = org.shehta.ahmed
 source.dir = .
 source.include_exts = py,png,jpg,kv,json,ttf,java
 version = 1.0
-# ONLY KIVY AND PYTHON
-requirements = python3,kivy
-
+requirements = python3,kivy,kivymd,plyer,firebase-admin,bcrypt,cryptography
 orientation = portrait
+icon.filename = %(source.dir)s/assets/logo.png
+android.add_assets = .
 
 [android]
-android.permissions = INTERNET
+android.permissions = INTERNET,VIBRATE,WAKE_LOCK
+android.api = 31
+android.minapi = 21
 android.archs = arm64-v8a
+android.enable_androidx = True
+p4a.source_dir = src
+services = AlarmReceiver:src/main/java/org/eldercare/singularity/AlarmReceiver.java
 
 [buildozer]
 log_level = 2
+warn_on_root = 1
+# Force buildozer to create its build directory locally
+build_dir = ./.buildozer
